@@ -78,13 +78,15 @@ def decode_symbol(px, x, y):
                 return '=', (w, w)
         elif w == 4:
             if np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,1,0,0], [1,0,0,1], [1,0,1,1]]):
-                return '(+1)', (w, w)
+                return 'inc', (w, w)
             elif np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,1,0,0], [1,0,1,0], [1,0,1,1]]):
-                return '(-1)', (w, w)
+                return 'dec', (w, w)
             elif np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,1,0,1], [1,1,0,1], [1,1,0,1]]):
-                return '(+)', (w, w)
+                return 'add', (w, w)
             elif np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,0,1,0], [1,0,1,0], [1,0,1,0]]):
-                return '(*)', (w, w)
+                return 'mul', (w, w)
+            elif np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,0,0,0], [1,1,0,1], [1,0,0,0]]):
+                return 'div', (w, w)
         return
 
     n = _unpack_number(px, x=x, y=y, w=w, h=w)
