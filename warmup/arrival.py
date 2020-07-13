@@ -76,6 +76,10 @@ def decode_symbol(px, x, y):
         elif w == 3:
             if np.all(px[y:y+w, x:x+w] == [[1,1,1], [1,0,0], [1,1,1]]):
                 return '=', (w, w)
+            elif np.all(px[y:y+w, x:x+w] == [[1,1,1], [1,0,1], [1,0,0]]):
+                return 'True', (w, w)
+            elif np.all(px[y:y+w, x:x+w] == [[1,1,1], [1,0,0], [1,0,1]]):
+                return 'False', (w, w)
         elif w == 4:
             if np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,1,0,0], [1,0,0,1], [1,0,1,1]]):
                 return 'inc', (w, w)
@@ -87,6 +91,8 @@ def decode_symbol(px, x, y):
                 return 'mul', (w, w)
             elif np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,0,0,0], [1,1,0,1], [1,0,0,0]]):
                 return 'div', (w, w)
+            elif np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,0,0,0], [1,0,0,0], [1,1,1,1]]):
+                return 'eq', (w, w)
         return
 
     n = _unpack_number(px, x=x, y=y, w=w, h=w)
