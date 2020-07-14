@@ -22,83 +22,75 @@ def encode_number(n):
     return g
 
 
-def _extract_border(px, x, y, w, h):
-    if ((x < 0) or (y < 0) or (w <= 0) or (h <= 0)
-        or (y + h >= px.shape[0])
-        or (x + w >= px.shape[1])):
-        return
+class Decoder:
+    symbols = dict()
+    symbols[(2, 0)] = '$'
+    symbols[(3, 2)] = 'True'
+    symbols[(3, 8)] = 'False'
+    symbols[(3, 12)] = '='
+    symbols[(4, 40)] = 'div'
+    symbols[(4, 146)] = 'mul'
+    symbols[(4, 365)] = 'add'
+    symbols[(4, 401)] = 'dec'
+    symbols[(4, 416)] = 'lt'
+    symbols[(4, 417)] = 'inc'
+    symbols[(4, 448)] = 'eq'
 
-    res = np.zeros(((w + h - 2) * 2, ), dtype=px.dtype)
-    i = 0
-    for dx in range(x, x + w):
-        res[i] = px[y, dx]
-        i += 1
-    for dy in range(y + 1, y + h):
-        res[i] = px[dy, x + w - 1]
-        i += 1
-    for dx in reversed(range(x, x + w - 1)):
-        res[i] = px[y + h - 1, dx]
-        i += 1
-    for dy in reversed(range(y + 1, y + h - 1)):
-        res[i] = px[dy, x]
-        i += 1
-    return res
+    def _extract_border(self, px, x, y, w, h):
+        if ((x < 0) or (y < 0) or (w <= 0) or (h <= 0)
+            or (y + h >= px.shape[0])
+            or (x + w >= px.shape[1])):
+            return
 
+        res = np.zeros(((w + h - 2) * 2, ), dtype=px.dtype)
+        i = 0
+        for dx in range(x, x + w):
+            res[i] = px[y, dx]
+            i += 1
+        for dy in range(y + 1, y + h):
+            res[i] = px[dy, x + w - 1]
+            i += 1
+        for dx in reversed(range(x, x + w - 1)):
+            res[i] = px[y + h - 1, dx]
+            i += 1
+        for dy in reversed(range(y + 1, y + h - 1)):
+            res[i] = px[dy, x]
+            i += 1
+        return res
 
-def _unpack_number(px, x, y, w, h):
-    n = 0
-    bit = 1
-    for dy in range(1, h):
-        for dx in range(1, w):
-            n |= bit if px[y + dy, x + dx] else 0
-            bit <<= 1
-    return n
+    def _unpack_number(self, px, x, y, w, h):
+        n = 0
+        bit = 1
+        for dy in range(1, h):
+            for dx in range(1, w):
+                n |= bit if px[y + dy, x + dx] else 0
+                bit <<= 1
+        return n
 
+    def decode_symbol(self, px, x, y):
+        w = 1
+        while (y + w < px.shape[0]) and (x + w < px.shape[1]) and px[y, x + w] and px[y + w, x]:
+            w += 1
+        else:
+            neg = (y + w < px.shape[0]) and (px[y + w, x] != 0)
 
-def decode_symbol(px, x, y):
-    w = 1
-    while (y + w < px.shape[0]) and (x + w < px.shape[1]) and px[y, x + w] and px[y + w, x]:
-        w += 1
-    else:
-        neg = (y + w < px.shape[0]) and (px[y + w, x] != 0)
+        if w < 2: return
+        border = self._extract_border(px, x=x-1, y=y-1, w=w+2, h=w+2+neg)
+        if np.any(border != 0): return
 
-    if w < 2: return
-    border = _extract_border(px, x=x-1, y=y-1, w=w+2, h=w+2+neg)
-    if np.any(border != 0): return
+        if px[y,x] and (not neg):
+            if w >= 4 and np.all(self._extract_border(px, x=x, y=y, w=w, h=w) != 0):
+                n = self._unpack_number(1 - px, x=x+1, y=y+1, w=w-2, h=w-2)
+                return f'v{n}', (w, w)
+            else:
+                n = self._unpack_number(px, x=x, y=y, w=w, h=w)
+                sym = self.symbols.get((w, n))
+                if sym is not None:
+                    return sym, (w, w)
+                return str(n), (w, w)
 
-    if px[y,x]:
-        if w >= 4 and (not neg) and np.all(_extract_border(px, x=x, y=y, w=w, h=w) != 0):
-            n = _unpack_number(1 - px, x=x+1, y=y+1, w=w-2, h=w-2)
-            return f'v{n}', (w, w)
-        elif w == 2:
-            if np.all(px[y:y+w, x:x+w] == [[1,1], [1,0]]):
-                return '$', (w, w)
-        elif w == 3:
-            if np.all(px[y:y+w, x:x+w] == [[1,1,1], [1,0,0], [1,1,1]]):
-                return '=', (w, w)
-            elif np.all(px[y:y+w, x:x+w] == [[1,1,1], [1,0,1], [1,0,0]]):
-                return 'True', (w, w)
-            elif np.all(px[y:y+w, x:x+w] == [[1,1,1], [1,0,0], [1,0,1]]):
-                return 'False', (w, w)
-        elif w == 4:
-            if np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,1,0,0], [1,0,0,1], [1,0,1,1]]):
-                return 'inc', (w, w)
-            elif np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,1,0,0], [1,0,1,0], [1,0,1,1]]):
-                return 'dec', (w, w)
-            elif np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,1,0,1], [1,1,0,1], [1,1,0,1]]):
-                return 'add', (w, w)
-            elif np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,0,1,0], [1,0,1,0], [1,0,1,0]]):
-                return 'mul', (w, w)
-            elif np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,0,0,0], [1,1,0,1], [1,0,0,0]]):
-                return 'div', (w, w)
-            elif np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,0,0,0], [1,0,0,0], [1,1,1,1]]):
-                return 'eq', (w, w)
-            elif np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,0,0,0], [1,0,0,1], [1,0,1,1]]):
-                return 'lt', (w, w)
-        return
-
-    n = _unpack_number(px, x=x, y=y, w=w, h=w)
-    return (-n if neg else n), (w + neg, w)
+        n = self._unpack_number(px, x=x, y=y, w=w, h=w)
+        return (-n if neg else n), (w + neg, w)
 
 
 def ocr(px):
@@ -107,10 +99,12 @@ def ocr(px):
         if px[i,i] == 0: break
         scale += 1
     px = px[::scale, ::scale]
+    
+    decoder = Decoder()
     y, x, row = 1, 1, 0
     while y + 1 < px.shape[0]:
         while x + 1 < px.shape[1]:
-            r = decode_symbol(px, x=x, y=y)
+            r = decoder.decode_symbol(px, x=x, y=y)
             if r:
                 n, (h, w) = r
                 yield (n, (x*scale, y*scale, (x+w)*scale, (y+h)*scale))
@@ -206,8 +200,14 @@ def annotate(im, scale=10, pad=3):
 
 
 if __name__ == '__main__':
+    import argparse
 
-    def main():
-        pass
+    def main(fn):
+        with Image.open(fn) as im:
+            print(annotate(im))
 
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('input', help='Message image to annotate')
+    args = parser.parse_args()
+
+    main(fn=args.input)
