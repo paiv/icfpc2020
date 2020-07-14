@@ -93,6 +93,8 @@ def decode_symbol(px, x, y):
                 return 'div', (w, w)
             elif np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,0,0,0], [1,0,0,0], [1,1,1,1]]):
                 return 'eq', (w, w)
+            elif np.all(px[y:y+w, x:x+w] == [[1,1,1,1], [1,0,0,0], [1,0,0,1], [1,0,1,1]]):
+                return 'lt', (w, w)
         return
 
     n = _unpack_number(px, x=x, y=y, w=w, h=w)
