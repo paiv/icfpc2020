@@ -30,6 +30,8 @@ class Decoder:
     symbols[(3, 12)] = '='
     symbols[(4, 40)] = 'div'
     symbols[(4, 146)] = 'mul'
+    symbols[(4, 170)] = 'unp'
+    symbols[(4, 341)] = 'pac'
     symbols[(4, 365)] = 'add'
     symbols[(4, 401)] = 'dec'
     symbols[(4, 416)] = 'lt'
@@ -58,7 +60,7 @@ class Decoder:
             i += 1
         return res
 
-    def _unpack_number(self, px, x, y, w, h):
+    def _decode_2dnumber(self, px, x, y, w, h):
         n = 0
         bit = 1
         for dy in range(1, h):
@@ -67,6 +69,45 @@ class Decoder:
                 bit <<= 1
         return n
 
+    def _decode_1dnumber(self, px, x, y):
+        if (y < 1) or (y + 3 > px.shape[0]) or (x < 1) or np.any(px[y-1:y+3, x-1]):
+            return
+
+        def parse():
+            q = x
+            while (q < px.shape[1]) and (px[y, q] != px[y+1, q]):
+                if px[y-1, q] or px[y+2, q]: break
+                yield px[y, q] != 0
+                q += 1
+
+        p = parse()
+        sig = (next(p, None), next(p, None))
+        neg = 0
+        if sig == (0, 1):
+            pass
+        elif sig == (1, 0):
+            neg = 1
+        else:
+            return
+
+        q = x + 2
+        t = 0
+        while (bit := next(p, None)) is not None:
+            q += 1
+            if not bit: break
+            t += 1
+
+        t *= 4
+        n = 0
+        while (t > 0) and (bit := next(p, None)) is not None:
+            n = (n << 1) | bit
+            q += 1
+            t -= 1
+
+        if (t != 0) or (q >= px.shape[1]) or np.any(px[y-1:y+3, q]) or (q - x < 3):
+            return
+        return (-n if neg else n), (q - x)
+
     def decode_symbol(self, px, x, y):
         w = 1
         while (y + w < px.shape[0]) and (x + w < px.shape[1]) and px[y, x + w] and px[y + w, x]:
@@ -74,22 +115,26 @@ class Decoder:
         else:
             neg = (y + w < px.shape[0]) and (px[y + w, x] != 0)
 
+        if (w in (1, 2)) and ((n := self._decode_1dnumber(px, x=x, y=y)) is not None):
+            n, w = n
+            return n, (2, w)
+
         if w < 2: return
         border = self._extract_border(px, x=x-1, y=y-1, w=w+2, h=w+2+neg)
         if np.any(border != 0): return
 
         if px[y,x] and (not neg):
             if w >= 4 and np.all(self._extract_border(px, x=x, y=y, w=w, h=w) != 0):
-                n = self._unpack_number(1 - px, x=x+1, y=y+1, w=w-2, h=w-2)
+                n = self._decode_2dnumber(1 - px, x=x+1, y=y+1, w=w-2, h=w-2)
                 return f'v{n}', (w, w)
             else:
-                n = self._unpack_number(px, x=x, y=y, w=w, h=w)
+                n = self._decode_2dnumber(px, x=x, y=y, w=w, h=w)
                 sym = self.symbols.get((w, n))
                 if sym is not None:
                     return sym, (w, w)
                 return str(n), (w, w)
 
-        n = self._unpack_number(px, x=x, y=y, w=w, h=w)
+        n = self._decode_2dnumber(px, x=x, y=y, w=w, h=w)
         return (-n if neg else n), (w + neg, w)
 
 
@@ -99,7 +144,7 @@ def ocr(px):
         if px[i,i] == 0: break
         scale += 1
     px = px[::scale, ::scale]
-    
+
     decoder = Decoder()
     y, x, row = 1, 1, 0
     while y + 1 < px.shape[0]:
