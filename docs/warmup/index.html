@@ -104,6 +104,16 @@ function encodeNumber2d(token) {
   }
   return g
 }
+function wrap(tok, bit=0) {
+  let w = tok[0].length + 2
+  let res = new Array()
+  res.push(Array(w).fill(bit))
+  for (const r of tok) {
+    res.push([bit, ...r, bit])
+  }
+  res.push(Array(w).fill(bit))
+  return res
+}
 const TokenSymbols = (() => {
   const Table = [
     [0, 'ap,$'],
@@ -140,19 +150,21 @@ function encodeToken(token) {
   if (Number.isInteger(token)) {
     return encodeNumber2d(token)
   }
+  let n = parseInt(token.substring(1), 10)
+  if (Number.isInteger(n)) {
+    let s = encodeNumber2d(n)
+    let w = s[0].length
+    let h = s.length
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        s[y][x] = 1 - s[y][x]
+      }
+    }
+    return wrap(s, 1)
+  }
   return token
 }
 function assembleMessage(tokens) {
-  const wrap = (tok, bit=0) => {
-    let w = tok[0].length + 2
-    let res = new Array()
-    res.push(Array(w).fill(bit))
-    for (const r of tok) {
-      res.push([bit, ...r, bit])
-    }
-    res.push(Array(w).fill(bit))
-    return res
-  }
   let rows = new Array()
   let run = new Array()
   for (const tok of tokens) {
