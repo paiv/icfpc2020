@@ -10,12 +10,20 @@
 @media (prefers-color-scheme:dark) {:root {--bg:#202124;--fg:#f1f3f4;}}
 body, body * {background:var(--bg); color:var(--fg);}
 textarea {white-space:pre;word-wrap:normal;}
+a {text-decoration:none;} a:hover {text-decoration:underline;}
+.s {font-size: smaller;}
+.z {font-size: xxx-large;}
 .t * {font-family:monospace;}
+.em {font-weight:bolder;}
 .aa {max-width:80em;display:flex;flex-wrap:wrap;justify-content:space-around;}
 </style>
 </head>
 <body>
-<h1>Arrival Transceiver</h1>
+
+<p>
+<span class="em">Arrival Transceiver</span> <br>
+<a class="s" href="https://message-from-space.readthedocs.io/">Message From Space</a>
+</p>
 
 <div class="aa">
 
@@ -23,7 +31,8 @@ textarea {white-space:pre;word-wrap:normal;}
 <p>
   Send message
 </p>
-<textarea name="message_text" rows="5">ap ap add 2 2 = 4</textarea>
+<textarea name="message_text" rows="5">ap ap add 2 2 = 4
+ap unp 2 = ~2~</textarea>
 <p>
   <button type="button" name="encode" onclick="encodeMessage()">Encode</button>
 </p>
@@ -49,6 +58,10 @@ function* tokenize(text) {
           if (/\d|\-/.test(ch)) {
             s += ch
             state = 1
+          }
+          else if (/~/.test(ch)) {
+            s += ch
+            state = 3
           }
           else if (/[^\s]/.test(ch)) {
             s += ch
@@ -80,6 +93,33 @@ function* tokenize(text) {
             state = 0
             consumed = false
           }
+          break
+        case 3:
+          if (/[\d\-]/.test(ch)) {
+            s += ch
+            state = 4
+          }
+          else {
+            s = ''
+            state = 0
+            consumed = false
+          }
+          break
+        case 4:
+          if (/\d/.test(ch)) {
+            s += ch
+          }
+          else if (/~/.test(ch)) {
+            yield s
+            s = ''
+            state = 0
+          }
+          else {
+            s = ''
+            state = 0
+            consumed = false
+          }
+          break
       }
     }
   }
@@ -103,6 +143,35 @@ function encodeNumber2d(token) {
     }
   }
   return g
+}
+function encodeNumber1d(token) {
+  let n = Math.abs(token)
+  let neg = token < 0 ? 1 : 0
+  let s = new Array()
+  while (n > 0) {
+    s.push(n & 1)
+    n >>= 1
+  }
+  while (s.length % 4) {
+    s.push(0)
+  }
+  let w = 3 + s.length / 4 + s.length
+  let g1 = new Array()
+  let g0 = new Array()
+  const write = (bit) => {
+    g1.push(bit)
+    g0.push(1-bit)
+  }
+  write(neg)
+  write(1-neg)
+  for (let i = s.length / 4; i > 0; i--) {
+    write(1)
+  }
+  write(0)
+  while (s.length) {
+    write(s.pop())
+  }
+  return [g1, g0]
 }
 function wrap(tok, bit=0) {
   let w = tok[0].length + 2
@@ -147,6 +216,9 @@ const TokenSymbols = (() => {
 function encodeToken(token) {
   let s = TokenSymbols.get(token)
   if (s !== undefined) return s
+  if (token[0] === '~') {
+    return encodeNumber1d(token.substring(1))
+  }
   if (Number.isInteger(token)) {
     return encodeNumber2d(token)
   }
