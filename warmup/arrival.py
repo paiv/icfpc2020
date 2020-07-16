@@ -31,6 +31,7 @@ class Decoder:
     symbols[(4, 40)] = 'div'
     symbols[(4, 146)] = 'mul'
     symbols[(4, 170)] = 'unp'
+    symbols[(4, 174)] = 'dish'
     symbols[(4, 341)] = 'pac'
     symbols[(4, 365)] = 'add'
     symbols[(4, 401)] = 'dec'
@@ -124,9 +125,11 @@ class Decoder:
         if np.any(border != 0): return
 
         if px[y,x] and (not neg):
-            if w >= 4 and np.all(self._extract_border(px, x=x, y=y, w=w, h=w) != 0):
+            if np.all(self._extract_border(px, x=x, y=y, w=w, h=w) != 0) and np.all(px[y+1:y+w-1, x+1:x+w-1] == 0):
+                return
+            if (w >= 4) and np.all(self._extract_border(px, x=x, y=y, w=w, h=w) != 0):
                 n = self._decode_2dnumber(1 - px, x=x+1, y=y+1, w=w-2, h=w-2)
-                return f'v{n}', (w, w)
+                return f'v{n:X}', (w, w)
             else:
                 n = self._decode_2dnumber(px, x=x, y=y, w=w, h=w)
                 sym = self.symbols.get((w, n))
