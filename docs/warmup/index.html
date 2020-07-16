@@ -326,7 +326,7 @@ function renderSymbolDictionary() {
   table.sort(([a,ta],[b,tb]) => a.toLowerCase().localeCompare(b.toLowerCase()))
   for (const [s, tok] of table) {
     let div = document.createElement('div')
-    let data = renderMessage(tok)
+    let data = renderMessage(wrap(tok, 0))
     let image = document.createElement('img')
     image.src = data
     let span = document.createElement('span')
