@@ -31,7 +31,7 @@ class Decoder:
     symbols[(4, 40)] = 'div'
     symbols[(4, 146)] = 'mul'
     symbols[(4, 170)] = 'unp'
-    symbols[(4, 174)] = 'dish'
+    symbols[(4, 174)] = 'eval'
     symbols[(4, 341)] = 'pac'
     symbols[(4, 365)] = 'add'
     symbols[(4, 401)] = 'dec'
