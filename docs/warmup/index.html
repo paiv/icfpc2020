@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAEpUlEQVRYw7XXfaiX9RkG8M85O1pHa09LSxTKjXStxKAa1TZrG66IwhWxWtHA4mFpBRKVJkVbbxBI5Wqx1uoxerGV0RhR1GIObS/VVGoDqczeo/Vi2aOmHo969ofXgaefv/PiWg88f/x+35f7uq/7ul8eBnvKulNZd/gSn44BDE/ETzEFG/FPPI/XVUXvlwugrA/Aw/gO1mEkvopP8GfcgVX/LyDtAMwIgAWo0I0jcS6Ox3Y8hIWq4vVBwrd3gG/FRlXRNzSAXfG+AZfiVFXxl8ZaN47FXPwQa/FLPKEqtrXc821cjcPD3B14cLd96Gz53YVvYQQmfG6lKraoimU4BxdibyzC9cp6bMP4wbgL3wvIfXErZgyHgdFYGk+X4GdtY72Lqam4Gd/H07gb4zE9xubgHhyKJ/ACftJ6X1fL1XsFscT7MGX9UrzdDwdiIiaF3rH4Ck7BiWGuAz14T1VsU9Yf4TOMasP4bgBGxNiHMXhrYjgxxotkxfak5zo8hY/x46x9FEeuUdYHJZu+gXuxbSgAnfFoRcCcFACv4jm8nPcNvI/12BJRnpz/LwxDC/DrAF2Cql0mtALYmXdr4nsU1qQova8qtrfRwolR+UZcgGcjwC704Vr8VlVsaSfC1pjsCE3dqXyLAuLsAGtn/Hcx1G98Hi5POHqwYiDj7QBsxabEvw+/wspceMIwjM/N+yo+jTPbBquErQB6I6KvYbSq+E886sFCZf3NhvE7w8oF+Ef2zcMzCdnqiHa+st5/TwC8iTHoP/QcroySb0s47oznP8ffY3gulmNWsmP/MHoqLlHWXUMDqIqd+Bf2SeqJcpdElCek4HTEeJP2ZzBbVbwd42PxWP6/OKwNyQD8O9Qe1wDWi4VpTiPxUtKx3/hfMSvGpSKOxt9wRTLkWmU9YTgA1uIdTE9p7gexCb/AffhBvJsXI03jEq7O3PVi2DsCs5R151AA1iWWU3FYS4jWx+PFWd+Aa1TFWy13TEmBejdhXZy0Pj/NbhAAuw78PhVx5m7iqYpPcBl+E5XfoKynNFJ0BCangq5rnLkl4p7ZZKFzgOxYiWU4E8e0AVnjKlyPo/Gwsj45YLtxUEr1hsap5RH4aRg3OICq2IwbUxlvUtaT2+z5DDdhdjrd/ZifPjAu6dzTOFHjDwF3+FAMiNKXJxseUNbTM2ZpyY4lOCveXZV4H4A1qmJHY29fdKAJoGuAeW5MutnpeCXT0SN4Wlnfg1VYryp25OKVyvrsFKGL0kmnKetpGUQ2NzphX9r1gEPpqAhmJh7AdSksl6bljk7bXZEUfCXx3pRKOjUi/VH6wAvR04c4I4yeriqWDjSUnofb8SjmqIpPszYyaTkjc8LkZMHOTDybUnB6U6wmRRv9XvcmM+5L6m5pB+DreDLIT1MVbw4wD45KWA4JKxfl8tWhtzMC3hDP38jaarzWnAs7Wi6+LKk1W1XcO6wvi116eSwj2yl4t+H1TmxPbWn7NEW4X9roO3hRWY/fgw+cPwb48api0f/2ZVTW38WfAuqDhhfNfQP97g4Dj+NMVdEzXABNBrpD5Rf5Gn6vMYrtMQMdQxSm4T3N4jOM579C3JJe8m7HZAAAAABJRU5ErkJggg==">
+  <title>Arrival Transceiver</title>
+
+<style>
+:root {--bg:#fff;--fg:#000}
+@media (prefers-color-scheme:dark) {:root {--bg:#202124;--fg:#f1f3f4;}}
+body, body * {background:var(--bg); color:var(--fg);}
+textarea {white-space:pre;word-wrap:normal;}
+.t * {font-family:monospace;}
+.aa {max-width:80em;display:flex;flex-wrap:wrap;justify-content:space-around;}
+</style>
+</head>
+<body>
+<h1>Arrival Transceiver</h1>
+
+<div class="aa">
+
+<div class="transmitter t">
+<p>
+  Send message
+</p>
+<textarea name="message_text" rows="5">ap ap add 2 2 = 4</textarea>
+<p>
+  <button type="button" name="encode" onclick="encodeMessage()">Encode</button>
+</p>
+<div class="output">
+</div>
+</div>
+
+<div class="dictionary">
+</div>
+
+</div>
+
+<script type="text/javascript">
+function* tokenize(text) {
+  let state = 0
+  let s = ''
+  for (const ch of [...(text || '') + ' ']) {
+    let consumed = false
+    while (!consumed) {
+      consumed = true
+      switch (state) {
+        case 0:
+          if (/\d|\-/.test(ch)) {
+            s += ch
+            state = 1
+          }
+          else if (/[^\s]/.test(ch)) {
+            s += ch
+            state = 2
+          }
+          else if (/\n/.test(ch)) {
+            yield ch
+          }
+          break
+        case 1:
+          if (/\d/.test(ch)) {
+            s += ch
+          }
+          else {
+            const x = parseInt(s, 10)
+            yield x
+            s = ''
+            state = 0
+            consumed = false
+          }
+          break
+        case 2:
+          if (/[a-z\d]/i.test(ch)) {
+            s += ch
+          }
+          else {
+            yield s
+            s = ''
+            state = 0
+            consumed = false
+          }
+      }
+    }
+  }
+}
+function encodeNumber2d(token) {
+  let n = Math.abs(token)
+  let neg = token < 0 ? 1 : 0
+  let w = 1 + (n == 0 ? 1 : Math.ceil(Math.sqrt(1 + Math.floor(Math.log2((n))))))
+  let h = w + neg
+  let g = Array(h).fill(0).map(_ => Array(w).fill(0))
+  g[h-1][0] = neg
+  for (let i = 1; i < w; i++) {
+    g[0][i] = 1
+    g[i][0] = 1
+  }
+  let mask = 1
+  for (let y = 1; y < w; y++) {
+    for (let x = 1; x < w; x++) {
+      g[y][x] = (n & mask) ? 1 : 0
+      mask <<= 1
+    }
+  }
+  return g
+}
+const TokenSymbols = (() => {
+  const Table = [
+    [0, 'ap,$'],
+    [2, 't,True'],
+    [8, 'f,False'],
+    [12, '='],
+    [40, 'div'],
+    [146, 'mul'],
+    [170, 'unp'],
+    [174, 'eval'],
+    [341, 'pac'],
+    [365, 'add'],
+    [401, 'dec'],
+    [416, 'lt'],
+    [417, 'inc'],
+    [448, 'eq'],
+  ]
+  const enc = (n) => {
+    let g = encodeNumber2d(n)
+    g[0][0] = 1
+    return g
+  }
+  let m = new Map()
+  for (const [n, rs] of Table) {
+    for (const s of rs.split(',')) {
+      m.set(s.trim(), enc(n))
+    }
+  }
+  return m
+})()
+function encodeToken(token) {
+  let s = TokenSymbols.get(token)
+  if (s !== undefined) return s
+  if (Number.isInteger(token)) {
+    return encodeNumber2d(token)
+  }
+  return token
+}
+function assembleMessage(tokens) {
+  const wrap = (tok, bit=0) => {
+    let w = tok[0].length + 2
+    let res = new Array()
+    res.push(Array(w).fill(bit))
+    for (const r of tok) {
+      res.push([bit, ...r, bit])
+    }
+    res.push(Array(w).fill(bit))
+    return res
+  }
+  let rows = new Array()
+  let run = new Array()
+  for (const tok of tokens) {
+    if (tok === '\n') {
+      if (run.length) rows.push(run)
+      run = new Array()
+    }
+    else {
+      run.push(wrap(tok, 0))
+    }
+  }
+  if (run.length || !rows.length) {
+    rows.push(run)
+  }
+  const flatten = (sparse) => {
+    const w = Math.max(...sparse.map(r => r.map(t => t[0].length).reduce((a,x) => a + x)))
+    const h = sparse.map(r => Math.max(...r.map(t => t.length))).reduce((a,x) => a + x)
+    let grid = Array(h).fill(0).map(_ => Array(w).fill(0))
+    let x=0, y=0
+    for (const row of sparse) {
+      for (const tok of row) {
+        let j = y
+        for (const r of tok) {
+          let i = x
+          for (const v of r) {
+            grid[j][i] = v
+            i += 1
+          }
+          j += 1
+        }
+        x += tok[0].length
+      }
+      x = 0
+      y += Math.max(...row.map(t => t.length))
+    }
+    return grid
+  }
+  return wrap(flatten(rows), 1)
+}
+function renderMessage(message, scale=4) {
+  const w = message[0].length * scale
+  const h = message.length * scale
+  let canvas = document.createElement('canvas')
+  canvas.width = w
+  canvas.height = h
+  let context = canvas.getContext('2d')
+  let image = context.createImageData(w, h)
+  let data = image.data
+  for (let y = 0; y < message.length; y++) {
+    for (let x = 0; x < message[0].length; x++) {
+      const v = message[y][x] * 255
+      for (let j = 0; j < scale; j++) {
+        for (let i = 0; i < scale; i++) {
+          let o = ((y * scale + j) * w + (x * scale + i)) * 4
+          data[o+0] = v
+          data[o+1] = v
+          data[o+2] = v
+          data[o+3] = 255
+          o += 4
+        }
+      }
+    }
+  }
+  context.putImageData(image, 0, 0)
+  return canvas.toDataURL('image/png')
+}
+function encodeMessage() {
+  let text = document.querySelector('.transmitter [name="message_text"]').value
+  let tokens = Array.from(tokenize(text))
+  tokens = tokens.map(encodeToken)
+  let message = assembleMessage(tokens)
+  let output = document.querySelector('.transmitter .output')
+  let data = renderMessage(message)
+
+  let image = output.querySelector('img')
+  if (image) {
+    output.removeChild(image)
+  }
+  image = document.createElement('img')
+  image.src = data
+  output.appendChild(image)
+  return false
+}
+function renderSymbolDictionary() {
+  let container = document.querySelector('.dictionary')
+  const table = Array.from(TokenSymbols)
+  table.sort(([a,ta],[b,tb]) => a.toLowerCase().localeCompare(b.toLowerCase()))
+  for (const [s, tok] of table) {
+    let div = document.createElement('div')
+    let data = renderMessage(tok)
+    let image = document.createElement('img')
+    image.src = data
+    let span = document.createElement('span')
+    span.textContent = '\u00A0\u00A0' + s
+    div.appendChild(image)
+    div.appendChild(span)
+    container.appendChild(div)
+  }
+}
+window.addEventListener('load', () => {
+  renderSymbolDictionary()
+})
+</script>
+
+</body>
+</html>
