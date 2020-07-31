@@ -2,4 +2,7 @@ matplotlib
 notebook
 numpy
 Pillow
+PyYAML
+requests
 scipy
+-e arrival
