@@ -1,0 +1,8 @@
+Please Evaluate Our Galaxy Evaluator
+18 July 2020, 23:40 EEST, by Igor Lukanin
+
+Running the galaxy protocol from the message #42 may still be a tough thing to
+do. Pavel Egorov has written a short “galaxy evaluator” which is guaranteed to
+work. It's in pseudo code so no team will get competitive advantage using it.
+
+https://message-from-space.readthedocs.io/en/latest/implementation.html

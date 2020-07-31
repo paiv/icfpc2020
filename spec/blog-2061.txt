@@ -1,0 +1,21 @@
+The Contest Has Ended!
+20 July 2020, 16:00 EEST, by Igor Lukanin
+
+We sincerely thank all the participants of the ICFP Contest 2020. That was our
+honor and great pleasure to organize this contest for you.
+
+We hope that you had fun too.
+
+In the next 7 days, we kindly ask you to do the following:
+
+Make public your repository (specified in the team profile). Don't forget to
+commit there your “galaxy evaluator” (or “Galaxy Pad”), if any. Add a README,
+share your experience, pictures, videos, and write-ups. Definitely do so, if you
+wish your team to be considered for a prize.
+
+Optionally, leave feedback (the link will appear right here.)
+
+Warm regards,
+
+Alexander Khramtsov, Alexey Kirpichnikov, Andrey Kostousov, Igor Lukanin, Ivan
+Dashkevich, Nika Samokhina, Nikita Sivukhin, Pavel Egorov

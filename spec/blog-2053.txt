@@ -1,0 +1,7 @@
+Galaxy as an Interaction Protocol
+17 July 2020, 22:00 EEST, by Igor Lukanin
+
+We've compiled all knowledge available in Discord about the message #42 and
+updated the docs. Have a look at the interpretation if you're confused or in
+need of a gentle nudge.
+https://message-from-space.readthedocs.io/en/latest/message42.html

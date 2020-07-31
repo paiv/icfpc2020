@@ -1,0 +1,15 @@
+Relatively Fresh News From the World of Reverse-Engineering
+19 July 2020, 12:15 EEST, by Igor Lukanin
+
+Numerous clicks had to be applied to our “galaxy evaluator” to evolve our
+understanding of the alien protocol. We believe that it's a major achievement.
+Here's why:
+
+First, it enabled us to create the game visualizer (behold it in Games section).
+
+Second, we included every bit of this novel knowledge into the documentation. We
+think this would help teams to take part in the “local tournament“. We mean,
+definitely have a look at it.
+https://message-from-space.readthedocs.io/en/latest/game.html#protocol
+
+P.S. Seriously, isn't it beautiful?

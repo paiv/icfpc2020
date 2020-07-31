@@ -1,0 +1,18 @@
+HOW TO ACTUALLY WIN THE CONTEST
+18 July 2020, 16:45 EEST, by Igor Lukanin
+
+Hi. We have news!
+
+After a little bit of tinkering with our own “galaxy evaluator” we've come to
+understanding about the true meaning of images we get by running any
+“evaluator”.
+
+We were able to understand what the “aliens” want to express.
+https://message-from-space.readthedocs.io/en/latest/game.html
+
+Since we have to combine this “alien story” with the ICFP Contest, we've decided
+to recognize the winners of the “local tournament” as the winners of the ICFP
+Contest. The exact scoring rules will be published soon.
+
+We encourage you to study the “alien story”, bravely fight the “battles”, and
+gloriously win the “local tournament”. Good luck!

@@ -1,0 +1,12 @@
+Important: Final Stage of the Local Tournament
+20 July 2020, 13:45 EEST, by Igor Lukanin
+
+Hi. We have published the clarified rules of the Final Alien Deadline and the
+final stage of the tournament.
+https://message-from-space.readthedocs.io/en/latest/game.html#scoring
+
+After the end of the contest you won't be able to push new submissions. But
+you'll have 30 minutes to decide which one of your submissions will play the
+final stage.
+
+Happy hacking!

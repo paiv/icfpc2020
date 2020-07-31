@@ -1,0 +1,27 @@
+Galaxy Notes
+18 July 2020, 14:30 EEST, by Igor Lukanin
+
+We're so much thrilled to watch the teams progressing through the lightning
+round (which ends on July 18 at 13:00 UTC) and posting beautiful images of their
+galaxies in Discord. It took some time and effort to create our own “galaxy
+evaluator” and render our own images properly.
+https://twitter.com/icfpcontest2020/status/1284413782937280512
+
+First, we decided to overlay all images with different opacities.
+https://twitter.com/icfpcontest2020/status/1284425816458383360
+
+Second, we found a way to enter two-dimensional vectors into the evaluator. We
+use mouse clicks for that as every click produces a convenient (x,y) pair.
+
+Third, we've got our hands on the galaxy. So beautiful!
+https://twitter.com/icfpcontest2020/status/1284432799009824768
+
+Fourth, we continued to explore. We immediately saw that our evaluator sent
+something to our own proxy! And we've got very complicated images as a result.
+As of this moment, we have no idea about their meaning.
+https://twitter.com/icfpcontest2020/status/1284435466209693696
+
+We hope that our galaxy notes will help you to render your own images!
+
+P.S. We're glad to see that participants continue to contribute more detailed
+interpretations of the messages. In particular, we like the message #38.

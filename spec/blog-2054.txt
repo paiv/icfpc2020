@@ -1,0 +1,10 @@
+How to Run the Galaxy (Video Course)
+18 July 2020, 02:15 EEST, by Igor Lukanin
+
+Running the galaxy protocol from the message #42 may be a tough thing to do.
+Pavel Egorov has recorded a short video course which addresses this issue. Watch
+Part 1, Part 2, and Part 3.
+
+https://www.youtube.com/watch?v=Jfd20wOImnI
+https://www.youtube.com/watch?v=oU4RAEQCTDE
+https://www.youtube.com/watch?v=A4WdLfHWZF0

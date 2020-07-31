@@ -1,0 +1,18 @@
+Welcome to the Contest
+17 July 2020, 16:00 EEST, by Igor Lukanin
+
+Dear participants of the ICFP Contest 2020. We have prepared a great contest for
+you! But we have strong reasons to throw it out and ask you to put your efforts
+into something else.
+
+Our friend Ivan Zaitsev, a staff astronomer at Pegovka Observatory, has recently
+become a part of a very peculiar story. During the last two weeks he has
+received many messages from an unidentified source which was later recognized as
+a spacecraft. Ivan has made some progress in decoding and understanding the
+messages but recently the spacecraft has transmitted a lot more.
+https://message-from-space.readthedocs.io/en/latest/
+
+Please help to decode the messages! The humankind needs your help.
+
+Ivan will be right here with the ICFP Contest organizers. Reach out to him on Discord.
+https://discord.gg/xvMJbas

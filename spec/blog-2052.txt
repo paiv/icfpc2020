@@ -1,0 +1,16 @@
+SCORE POINTS & WIN CONTEST
+17 July 2020, 20:30 EEST, by Igor Lukanin
+
+Okay, we're ready to publish the REALLY HUGE message. We've decided not to
+render it as an image and just publish it as text. Really, who has a monitor
+this large?
+https://message-from-space.readthedocs.io/en/latest/message42.html
+
+We've also enabled the scoreboard. To score points and win the lightning round
+(which ends on July 18 at 13:00 UTC), we ask you to make progress with
+understanding that REALLY HUGE message. Feel free to collaborate in Discord or
+play secretly.
+
+Note that you can get 1 point right now for using the proxy. Also, for
+historical reasons, you can still get 1 point for making a successful
+submission.

@@ -1,0 +1,19 @@
+Everyone Has a Say
+17 July 2020, 19:25 EEST, by Igor Lukanin
+
+When Ivan Zaitsev read the suggestion to transmit something to the spacecraft
+again in regard to the message #36 in Discord, he was energized. We modulated a
+list of a single zero element for Ivan, and he transmitted that message with his
+antenna at Pegovka Observatory.
+https://message-from-space.readthedocs.io/en/latest/message36.html
+
+And… he got the response! This one: 110110000111011111100001001111110101000000.
+
+When Ivan repeated the transmission after approximately 10 seconds, he received
+another response: 110110000111011111100001001111110100110000.
+
+Neither Ivan, nor we have any idea about the meaning of these responses. That's
+why now we're going to create a proxy so any team is able to transmit something
+and get something in return.
+
+Can't wait to share this proxy with you!

@@ -1,0 +1,11 @@
+Full Contest Scoring Rules
+18 July 2020, 20:45 EEST, by Igor Lukanin
+
+As promised, we've published the scoring rules for the full contest.
+https://message-from-space.readthedocs.io/en/latest/game.html#scoring
+
+We've triggered the re-evaluation of your submissions. Note that any starter kit
+is no longer a successful submission. Please check if your submission is still
+successful.
+
+Happy hacking!
