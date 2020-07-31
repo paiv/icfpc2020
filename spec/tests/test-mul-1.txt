@@ -1,0 +1,4 @@
+galaxy = mul
+---
+params = (42, 1)
+expect = 42

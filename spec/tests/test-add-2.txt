@@ -1,0 +1,4 @@
+galaxy = add
+---
+params = 1, 42
+expect = 43

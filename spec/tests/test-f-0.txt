@@ -1,0 +1,4 @@
+galaxy = f
+---
+params = (42, -2)
+expect = -2

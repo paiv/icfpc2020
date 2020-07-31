@@ -1,0 +1,4 @@
+galaxy = ap ap s div neg
+---
+params = 42
+expect = -1

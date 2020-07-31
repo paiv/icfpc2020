@@ -1,0 +1,4 @@
+galaxy = ap ap eq 1 2
+---
+params = -2, 42
+expect = 42

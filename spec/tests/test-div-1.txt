@@ -1,0 +1,4 @@
+galaxy = div
+---
+params = (42, 2)
+expect = 21

@@ -1,0 +1,4 @@
+galaxy = ap c div
+---
+params = 2, 42
+expect = 21

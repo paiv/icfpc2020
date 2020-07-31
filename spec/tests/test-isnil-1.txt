@@ -1,0 +1,4 @@
+galaxy = isnil
+---
+params = [], 42, -2
+expect = 42

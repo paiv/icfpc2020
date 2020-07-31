@@ -1,0 +1,5 @@
+:1001 = ap add 1
+galaxy = ap ap b :1001 neg
+---
+params = 42
+expect = -41

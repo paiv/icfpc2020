@@ -1,0 +1,4 @@
+galaxy = ap isnil nil
+---
+params = 42, -2
+expect = 42
